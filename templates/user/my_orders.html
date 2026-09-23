@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"><title>My Orders</title></head>
+<body><header class="site-header"><a class="brand" href="/">Smart<span>Cart</span></a><nav><a href="/">Home</a><a href="/user-login">User Login</a><a href="/user-register">User Register</a></nav></header><main class="page">
+<h2>My Orders</h2>
+<p><a href="/user/products">Products</a> | <a href="/user/cart">Cart ({{ session.get('cart', {})|length }})</a> | <a href="/user-logout">Logout</a></p>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% for category, message in messages %}<p>{{ message }}</p>{% endfor %}
+{% endwith %}
+{% if orders %}
+{% for order in orders %}
+<div class="order-card">
+<h3>Order #{{ order.order_id }}</h3>
+<p>Amount: ₹{{ order.amount }}</p>
+<p>Status: {{ order.payment_status }}</p>
+<p>Date: {{ order.created_at }}</p>
+<a href="/user/order-success/{{ order.order_id }}">View Order</a> |
+<a href="/user/download-invoice/{{ order.order_id }}">Download Invoice</a>
+</div>
+<hr>
+{% endfor %}
+{% else %}<p>You have no orders yet.</p>{% endif %}
+</main><footer class="site-footer"><div class="footer-inner"><div><h3>SmartCart</h3><p>Shopping made simple.</p></div><div><h3>Quick links</h3><p><a href="/">Home</a> · <a href="/user-login">User Login</a> · <a href="/admin-login">Admin Login</a></p></div></div><div class="footer-bottom">© SmartCart. All rights reserved.</div></footer></body>
+</html>

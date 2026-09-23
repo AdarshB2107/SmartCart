@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+
+<head><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Admin Profile</title>
+</head>
+
+<body><header class="site-header"><a class="brand" href="/">Smart<span>Cart</span></a><nav><a href="/">Home</a><a href="/admin-login">Admin Login</a><a href="/admin-signup">Admin Register</a></nav></header><main class="page">
+    <h2>Admin Profile</h2>{% with messages=get_flashed_messages(with_categories=true) %}{% for category,message in
+    messages %}<p>{{ message }}</p>{% endfor %}{% endwith %}{% if admin.profile_image %}<img
+        src="{{ url_for('static',filename='uploads/admin_profiles/'+admin.profile_image) }}" width="120"
+        height="120"><br><br>{% else %}<p>No Profile Image</p>{% endif %}<form method="POST"
+        enctype="multipart/form-data"><label>Name:</label><br><input name="name" value="{{ admin.name }}"
+            required><br><br><label>Email:</label><br><input type="email" name="email" value="{{ admin.email }}"
+            required><br><br><label>New Password (optional):</label><br><input type="password"
+            name="password"><br><br><label>New Profile Image (optional):</label><br><input type="file"
+            name="profile_image" accept="image/*"><br><br><button>Update Profile</button></form><br><a
+        href="/admin-dashboard">Dashboard</a>
+</main><footer class="site-footer"><div class="footer-inner"><div><h3>SmartCart</h3><p>Shopping made simple.</p></div><div><h3>Quick links</h3><p><a href="/">Home</a> · <a href="/user-login">User Login</a> · <a href="/admin-login">Admin Login</a></p></div></div><div class="footer-bottom">© SmartCart. All rights reserved.</div></footer></body>
+
+</html>

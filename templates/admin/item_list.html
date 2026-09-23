@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Products</title>
+</head>
+
+<body><header class="site-header"><a class="brand" href="/">Smart<span>Cart</span></a><nav><a href="/">Home</a><a href="/admin-login">Admin Login</a><a href="/admin-signup">Admin Register</a></nav></header><main class="page">
+    <h2>Product List</h2>{% with messages=get_flashed_messages(with_categories=true) %}{% for category,message in
+    messages %}<p>{{ message }}</p>{% endfor %}{% endwith %}<form method="GET"><input name="search"
+            placeholder="Search product..." value="{{ request.args.get('search','') }}"><button>Search</button></form>
+    <br>
+    <form method="GET"><select name="category">
+            <option value="">All Categories</option>{% for cat in categories %}<option value="{{ cat.category }}" {% if
+                request.args.get('category')==cat.category %}selected{% endif %}>{{ cat.category }}</option>{% endfor %}
+        </select><button>Filter</button></form><br><a href="/admin/add-item">Add New Product</a><br><br>
+    <table border="1" cellpadding="10">
+        <tr>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>View</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>{% for p in products %}<tr>
+            <td>{{ p.product_id }}</td>
+            <td>{% if p.image %}<img src="{{ url_for('static',filename='uploads/product_images/'+p.image) }}" width="70"
+                    height="70">{% endif %}</td>
+            <td>{{ p.name }}</td>
+            <td>{{ p.category }}</td>
+            <td>₹{{ p.price }}</td>
+            <td><a href="/admin/view-item/{{ p.product_id }}">View</a></td>
+            <td><a href="/admin/update-item/{{ p.product_id }}">Edit</a></td>
+            <td><a href="/admin/delete-item/{{ p.product_id }}"
+                    onclick="return confirm('Delete this product?')">Delete</a></td>
+        </tr>{% endfor %}
+    </table><br><a href="/admin-dashboard">Dashboard</a>
+</main><footer class="site-footer"><div class="footer-inner"><div><h3>SmartCart</h3><p>Shopping made simple.</p></div><div><h3>Quick links</h3><p><a href="/">Home</a> · <a href="/user-login">User Login</a> · <a href="/admin-login">Admin Login</a></p></div></div><div class="footer-bottom">© SmartCart. All rights reserved.</div></footer></body>
+
+</html>

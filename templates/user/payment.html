@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"><meta charset="UTF-8"><title>Shipping and Payment</title></head>
+<body><header class="site-header"><a class="brand" href="/">Smart<span>Cart</span></a><nav><a href="/">Home</a><a href="/user-login">User Login</a><a href="/user-register">User Register</a></nav></header><main class="page">
+<h2>Shipping Address</h2>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% for category, message in messages %}<p>{{ message }}</p>{% endfor %}
+{% endwith %}
+{% if step == "address" %}
+<form method="POST" action="/user/pay">
+    <label>Full Name</label><br>
+    <input type="text" name="full_name" value="{{ address.full_name if address else '' }}" required><br><br>
+    <label>Phone Number</label><br>
+    <input type="tel" name="phone" value="{{ address.phone if address else '' }}" required><br><br>
+    <label>House / Street / Area</label><br>
+    <textarea name="address_line" required>{{ address.address_line if address else '' }}</textarea><br><br>
+    <label>City</label><br>
+    <input type="text" name="city" value="{{ address.city if address else '' }}" required><br><br>
+    <label>State</label><br>
+    <input type="text" name="state" value="{{ address.state if address else '' }}" required><br><br>
+    <label>PIN Code</label><br>
+    <input type="text" name="postal_code" value="{{ address.postal_code if address else '' }}" required><br><br>
+    <label>Country</label><br>
+    <input type="text" name="country" value="{{ address.country if address else 'India' }}" required><br><br>
+    <button type="submit">Continue to Payment</button>
+</form>
+{% else %}
+<h3>Confirm Shipping Address</h3>
+<p>{{ address.full_name }} | {{ address.phone }}</p>
+<p>{{ address.address_line }}, {{ address.city }}, {{ address.state }} {{ address.postal_code }}, {{ address.country }}</p>
+<h3>Complete Your Payment</h3>
+<p>Total Amount: ₹{{ amount }}</p>
+<p>Razorpay Order ID: {{ order_id }}</p>
+<button id="rzp-button">Pay Now</button>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+var options = {
+    "key": "{{ key_id }}",
+    "amount": "{{ amount * 100 }}",
+    "currency": "INR",
+    "name": "SmartCart",
+    "description": "Order Payment",
+    "order_id": "{{ order_id }}",
+    "handler": function(response) {
+        var form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/verify-payment';
+        var fields = {
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_signature: response.razorpay_signature
+        };
+        for (var name in fields) {
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = name;
+            input.value = fields[name];
+            form.appendChild(input);
+        }
+        document.body.appendChild(form);
+        form.submit();
+    }
+};
+var rzp = new Razorpay(options);
+document.getElementById('rzp-button').onclick = function(e) {
+    rzp.open();
+    e.preventDefault();
+};
+</script>
+{% endif %}
+<br><a href="/user/cart">Back to Cart</a>
+</main><footer class="site-footer"><div class="footer-inner"><div><h3>SmartCart</h3><p>Shopping made simple.</p></div><div><h3>Quick links</h3><p><a href="/">Home</a> · <a href="/user-login">User Login</a> · <a href="/admin-login">Admin Login</a></p></div></div><div class="footer-bottom">© SmartCart. All rights reserved.</div></footer></body>
+</html>

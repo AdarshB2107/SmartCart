@@ -1,0 +1,6 @@
+Flask
+Flask-Mail
+bcrypt
+Werkzeug
+razorpay
+xhtml2pdf

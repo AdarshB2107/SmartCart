@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"><title>Order Successful</title></head>
+<body><header class="site-header"><a class="brand" href="/">Smart<span>Cart</span></a><nav><a href="/">Home</a><a href="/user-login">User Login</a><a href="/user-register">User Register</a></nav></header><main class="page">
+<h2>Your Order is Confirmed!</h2>
+<p>Thank you for shopping with SmartCart.</p>
+<p><b>Order ID:</b> {{ order.order_id }}</p>
+<p><b>Razorpay Order ID:</b> {{ order.razorpay_order_id }}</p>
+<p><b>Payment ID:</b> {{ order.razorpay_payment_id }}</p>
+<p><b>Payment Status:</b> {{ order.payment_status }}</p>
+<p><b>Date:</b> {{ order.created_at }}</p>
+<h3>Items</h3>
+<table border="1" cellpadding="8">
+<tr><th>Product</th><th>Quantity</th><th>Price</th><th>Total</th></tr>
+{% for item in items %}<tr><td>{{ item.product_name }}</td><td>{{ item.quantity }}</td><td>₹{{ item.price }}</td><td>₹{{ item.price * item.quantity }}</td></tr>{% endfor %}
+</table>
+<h3>Grand Total: ₹{{ order.amount }}</h3>
+<a href="/user/download-invoice/{{ order.order_id }}">Download Invoice (PDF)</a><br><br>
+<a href="/user/my-orders">My Orders</a><br><br>
+<a href="/user/products">Continue Shopping</a>
+</main><footer class="site-footer"><div class="footer-inner"><div><h3>SmartCart</h3><p>Shopping made simple.</p></div><div><h3>Quick links</h3><p><a href="/">Home</a> · <a href="/user-login">User Login</a> · <a href="/admin-login">Admin Login</a></p></div></div><div class="footer-bottom">© SmartCart. All rights reserved.</div></footer></body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"><title>Product Details</title></head>
+<body><header class="site-header"><a class="brand" href="/">Smart<span>Cart</span></a><nav><a href="/">Home</a><a href="/user-login">User Login</a><a href="/user-register">User Register</a></nav></header><main class="page">
+<p><a href="/user/products">Products</a> | <a href="/user/cart">Cart (<span id="cart-count">{{ session.get('cart', {})|length }}</span>)</a> | <a href="/user/my-orders">My Orders</a> | <a href="/user-logout">Logout</a></p>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% for category, message in messages %}<p id="message">{{ message }}</p>{% endfor %}
+{% endwith %}
+<h2>{{ product.name }}</h2>
+{% if product.image %}<img src="{{ url_for('static', filename='uploads/product_images/' + product.image) }}" width="250">{% endif %}
+<p><b>Description:</b> {{ product.description }}</p>
+<p><b>Category:</b> {{ product.category }}</p>
+<p><b>Price:</b> ₹{{ product.price }}</p>
+<button type="button" onclick="addToCart({{ product.product_id }})">Add to Cart</button>
+<br><br><a href="/user/products">Back to Products</a>
+<script>
+function addToCart(productId) {
+    fetch('/user/add-to-cart/' + productId, {headers: {'X-Requested-With': 'XMLHttpRequest'}})
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('cart-count').textContent = data.cart_count;
+            document.getElementById('message').textContent = data.message;
+        } else { alert(data.message); }
+    }).catch(() => alert('Could not add item to cart.'));
+}
+</script>
+</main><footer class="site-footer"><div class="footer-inner"><div><h3>SmartCart</h3><p>Shopping made simple.</p></div><div><h3>Quick links</h3><p><a href="/">Home</a> · <a href="/user-login">User Login</a> · <a href="/admin-login">Admin Login</a></p></div></div><div class="footer-bottom">© SmartCart. All rights reserved.</div></footer></body>
+</html>

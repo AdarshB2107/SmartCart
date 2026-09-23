@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"><title>Products</title></head>
+<body><header class="site-header"><a class="brand" href="/">Smart<span>Cart</span></a><nav><a href="/">Home</a><a href="/user-login">User Login</a><a href="/user-register">User Register</a></nav></header><main class="page">
+<h1 class="section-title">Discover products</h1>
+<p class="muted">Welcome, {{ session.get('user_name') }} — find something you’ll love.</p>
+<p><a href="/user/products">Shop</a> · <a href="/user/cart">Cart (<span id="cart-count">{{ session.get('cart', {})|length }}</span>)</a> · <a href="/user/my-orders">My Orders</a> · <a href="/user-logout">Logout</a></p>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% for category, message in messages %}<p>{{ message }}</p>{% endfor %}
+{% endwith %}
+<form class="search-panel" method="GET" action="/user/products">
+<div class="field"><label>Search products</label>
+<input name="search" value="{{ request.args.get('search','') }}" placeholder="Search by product name"></div>
+<div class="field"><label>Category</label>
+<select name="category">
+<option value="">All Categories</option>
+{% for cat in categories %}<option value="{{ cat.category }}" {% if request.args.get('category') == cat.category %}selected{% endif %}>{{ cat.category }}</option>{% endfor %}
+</select></div>
+<button type="submit">Apply filters</button>
+</form>
+
+<div id="products" class="product-grid">
+{% for product in products %}
+<article class="product-card">
+{% if product.image %}<img src="{{ url_for('static', filename='uploads/product_images/' + product.image) }}" width="160" height="120">{% endif %}
+<div class="card-body"><h3>{{ product.name }}</h3>
+<p>{{ product.category }}</p>
+<p class="price">₹{{ product.price }}</p>
+<div class="card-actions"><a class="btn btn-secondary" href="/user/product/{{ product.product_id }}">View details</a>
+<button type="button" onclick="addToCart({{ product.product_id }})">Add to cart</button></div></div>
+</article>
+{% else %}<div class="empty-state">No products found. Try a different search or category.</div>{% endfor %}
+</div>
+<script>
+function addToCart(productId) {
+    fetch('/user/add-to-cart/' + productId, {
+        method: 'GET',
+        headers: {'X-Requested-With': 'XMLHttpRequest'}
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('cart-count').textContent = data.cart_count;
+            alert(data.message);
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(() => alert('Could not add item to cart.'));
+}
+</script>
+</main><footer class="site-footer"><div class="footer-inner"><div><h3>SmartCart</h3><p>Shopping made simple.</p></div><div><h3>Quick links</h3><p><a href="/">Home</a> · <a href="/user-login">User Login</a> · <a href="/admin-login">Admin Login</a></p></div></div><div class="footer-bottom">© SmartCart. All rights reserved.</div></footer></body>
+</html>

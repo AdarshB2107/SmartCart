@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"><title>Dashboard</title></head>
+<body><header class="site-header"><a class="brand" href="/">Smart<span>Cart</span></a><nav><a href="/">Home</a><a href="/admin-login">Admin Login</a><a href="/admin-signup">Admin Register</a></nav></header><main class="page">
+{% with messages=get_flashed_messages(with_categories=true) %}
+{% for category,message in messages %}<p>{{ message }}</p>{% endfor %}
+{% endwith %}
+<h2>Welcome, {{ admin_name }}</h2>
+<a href="/admin/add-item">Add Product</a><br><br>
+<a href="/admin/item-list">View All Products</a><br><br>
+<a href="/admin/profile">My Profile</a><br><br>
+<a href="/admin-logout">Logout</a>
+</main><footer class="site-footer"><div class="footer-inner"><div><h3>SmartCart</h3><p>Shopping made simple.</p></div><div><h3>Quick links</h3><p><a href="/">Home</a> · <a href="/user-login">User Login</a> · <a href="/admin-login">Admin Login</a></p></div></div><div class="footer-bottom">© SmartCart. All rights reserved.</div></footer></body>
+</html>
