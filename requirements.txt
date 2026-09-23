@@ -4,3 +4,4 @@ bcrypt
 Werkzeug
 razorpay
 xhtml2pdf
+gunicorn
