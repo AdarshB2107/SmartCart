@@ -8,7 +8,7 @@ MAIL_SERVER = "smtp.gmail.com"
 MAIL_PORT = 587
 MAIL_USE_TLS = True
 MAIL_USERNAME = "bonalaadarsh@gmail.com"
-MAIL_PASSWORD = "jyoa tkny brii hkpf"
+MAIL_PASSWORD = "vxzl uryw ctrr swzn"
 
 # Razorpay test keys
 RAZORPAY_KEY_ID = "rzp_test_TcB8Ox8EYR2f8Z"
